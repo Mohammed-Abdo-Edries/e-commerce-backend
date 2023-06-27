@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 const validator = require("validator")
-
+// import * as bcrypt from "bcrypt"
 const Schema = mongoose.Schema
 const userSchema = new Schema({
     firstname: {
@@ -45,8 +45,8 @@ userSchema.statics.signup = async function (firstname, lastname, email, password
         throw Error('Email already in use')
     }
 
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(password, salt)
+    const salt = await bcrypt.genSaltSync(10)
+    const hash = await bcrypt.hashSync(password, salt)
     const user = await this.create({ firstname, lastname, email, password: hash })
 
     return user
@@ -63,7 +63,7 @@ userSchema.statics.login = async function (email, password) {
     const match = await bcrypt.compare(password, user.password)
     if (!match) {
         throw Error('Incorrect password')
-    }
+    };
     return user
 }
 

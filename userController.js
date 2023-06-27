@@ -13,6 +13,7 @@ const loginUser = async (req, res) => {
         const firstname = user.firstname
         const lastname = user.lastname
         const isAdmin = user.isAdmin
+        // const upassword = user.password
         res.status(200).json({ firstname, lastname, isAdmin, email, token })
     } catch (error) {
         res.status(400).json({ error: error.message })
@@ -38,4 +39,14 @@ const getAllUsers = async (req, res) => {
         console.log(error);
     }
 }
-module.exports = { signupUser, loginUser, getAllUsers }
+
+const deleteAllUsers = async (req, res) => {
+    try {
+        const users = await User.deleteMany({})
+        return res.status(200).json(users)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ error: error.message })
+    }
+}
+module.exports = { signupUser, loginUser, getAllUsers, deleteAllUsers }

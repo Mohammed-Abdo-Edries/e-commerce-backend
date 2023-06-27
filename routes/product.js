@@ -64,4 +64,14 @@ router.delete("/delete", async (req, res) => {
         return res.status(500).json({ message: error });
     }
 })
+
+router.delete("/deleteAllProudcts", async (req, res) => {
+    try {
+        const products = await Product.deleteMany({})
+        return res.status(200).json(products)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error });
+    }
+})
 module.exports = router;

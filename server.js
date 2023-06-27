@@ -10,7 +10,7 @@ app.use(cors())
 // app.use(express.static(path.join(__dirname, "build")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(express.json())
-app.use('/api/user', userRoutes)
+app.use('/user', userRoutes)
 app.use('/product', productRoutes)
 app.use(express.urlencoded({ extended: false }));
 // app.get('/', (req, res) => {
