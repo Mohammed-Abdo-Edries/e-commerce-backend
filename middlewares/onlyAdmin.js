@@ -1,8 +1,12 @@
-const onlyAdmin = (req, res, next) => {
-    if(req.user.role == "admin") {
-        next();
+const User = require('../models/userModel')
+
+const onlyAdmin = async (req, res, next) => {
+    const email = req.headers.email;
+    const user = await User.findOne({ email })
+    if (user.isAdmin) {
+        next()
     } else {
-        res.status(401).json({ mssg: "your not an Admin!" });
+        return res.status(400).json({ messege: "your not an admin" })
     }
 };
 module.exports = onlyAdmin;

@@ -28,7 +28,7 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.post("/create", upload, async (req, res) => {
+router.post("/create", upload, onlyAdmin, async (req, res) => {
     try {
         const { name, price, category, details } = req.body;
         const { filename: imgURL } = req.file;
@@ -47,7 +47,7 @@ router.post("/create", upload, async (req, res) => {
     }
 });
 
-router.delete("/delete", async (req, res) => {
+router.delete("/delete", onlyAdmin, async (req, res) => {
     try {
         const { id: _id } = req.headers;
         const deletedProduct = await Product.findByIdAndDelete({ _id });
@@ -65,7 +65,7 @@ router.delete("/delete", async (req, res) => {
     }
 })
 
-router.delete("/deleteAllProudcts", async (req, res) => {
+router.delete("/deleteAllProudcts", onlyAdmin, async (req, res) => {
     try {
         const category = req.headers.category;
         const products = await Product.deleteMany({ category: category })
