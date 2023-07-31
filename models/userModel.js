@@ -27,7 +27,7 @@ const userSchema = new Schema({
         minlength: 5
     },
     isAdmin: { type: Boolean, default: false }
-})
+}, { timestamps: true })
 
 userSchema.statics.signup = async function (firstname, lastname, email, password) {
     if (!firstname || !lastname || !email || !password) {

@@ -10,7 +10,7 @@ const onlyAdmin = require("../middlewares/onlyAdmin")
 router.get("/", async (req, res) => {
     try {
         const category = req.headers.category || null;
-        const products = await Product.find({ category });
+        const products = await Product.find({ category }).sort({ createdAt: -1 });
         return res.json(products);
     } catch (error) {
         console.log(error);
@@ -36,14 +36,14 @@ router.post("/create", upload, onlyAdmin, async (req, res) => {
             name, price, category, imgURL, details
         });
         if (product) {
-            return res.json({ mssg: "Product Created Successfuly" });
+            return res.status(200).json({ message: "Product Created Successfuly" });
         } else {
             console.log("something went wrong");
-            return res.status(500).json({ mssg: "something went wrong" });
+            return res.status(500).json({ message: "something went wrong" });
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ mssg: "something went wrong" });
+        return res.status(500).json({ message: "something went wrong" });
     }
 });
 
@@ -55,7 +55,7 @@ router.delete("/delete", onlyAdmin, async (req, res) => {
             await fs.unlink(
                 path.join(__dirname, "..", "images", deletedProduct.imgURL) || null
             );
-            return res.json({ message: "Product Deleted" });
+            return res.status(200).json({ message: "Product Deleted" });
         } else {
             return res.status(400).json({ message: "Product dose not exist" });
         }
@@ -69,7 +69,7 @@ router.delete("/deleteAllProudcts", onlyAdmin, async (req, res) => {
     try {
         const category = req.headers.category;
         const products = await Product.deleteMany({ category: category })
-        return res.status(200).json(products)
+        return res.status(200).json({ message: "all products deleted succesfuly" })
     } catch (error) {
         console.log(error)
         return res.status(400).json({ message: error });
