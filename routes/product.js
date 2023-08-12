@@ -6,6 +6,7 @@ const express = require('express')
 const router = express.Router()
 const onlyAdmin = require("../middlewares/onlyAdmin")
 
+
 router.get("/", async (req, res) => {
     try {
         const category = req.headers.category || null;
