@@ -18,17 +18,18 @@ app.use('/product', productRoutes)
 app.use('/user', userRoutes)
 app.use('/orders', orderRouts)
 
-const calculateAmount = async (items) => {
-    const _id = items[0].id
-    console.log(_id)
-    const product = await Product.findById({ _id })
-    const price = items[0].amount * product.price
-    console.log(price)
-    return price * 100;
-};
-const calculateOrderAmount = (items) => {
+// const calculateAmount = async (items) => {
+//     const _id = items[0].id
+//     console.log(_id)
+//     const product = await Product.findById({ _id })
+//     const price = items[0].amount * product.price
+//     console.log(price)
+//     return price * 100;
+// };
+
+async function calculateOrderAmount(items) {
     var price = 0
-    items.map(async (item) => {
+    await items.map(async (item) => {
         const _id = item.id;
         const product = await Product.findById({ _id });
         const fullPrice = item.amount * product.price
@@ -37,7 +38,6 @@ const calculateOrderAmount = (items) => {
         console.log(`inside the map is ${price}`)
     }
     );
-    console.log(`outside the map is ${price}`)
     return price
 };
 
@@ -45,7 +45,11 @@ app.post('/create-payment-intent', async (req, res) => {
     const { items } = req.body;
     console.log(items)
     const paymentIntent = await stripe.paymentIntents.create({
-        amount: items.length > 1 ? calculateOrderAmount(items) : calculateAmount(items),
+        amount:
+            Promise.all([calculateOrderAmount(items)]).then((values) => {
+                console.log(values);
+            })
+        ,
         currency: "cad",
         automatic_payment_methods: {
             enabled: true
