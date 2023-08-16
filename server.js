@@ -7,6 +7,8 @@ const userRoutes = require('./routes/user')
 const productRoutes = require('./routes/product')
 const orderRouts = require('./routes/order')
 const Product = require('./models/productModel')
+const { connectToDb, getDb } = require('./db');
+const { ObjectId } = require('mongodb');
 require('dotenv').config()
 const app = express()
 
@@ -26,24 +28,32 @@ app.use('/orders', orderRouts)
 //     console.log(price)
 //     return price * 100;
 // };
+let db
+connectToDb((err) => {
+    if (!err) {
+        console.log("connected to db succesfuly")
+        db = getDb()
+    }
+})
 
-async function calculateOrderAmount(items) {
+const calculateOrderAmount = (items) => {
     var price = 0
-    await items.map(async (item) => {
-        const _id = item.id;
-        const product = await Product.findById({ _id });
-        const fullPrice = item.amount * product.price
-        console.log(`item total is ${fullPrice}`)
-        price += fullPrice
-        console.log(`inside the map is ${price}`)
+    items.map((item) => {
+        db.collection('products').findOne({ _id: new ObjectId(item.id) })
+            .then((product) => {
+                const fullPrice = item.amount * product.price
+                console.log(`item total is ${fullPrice}`)
+                price += fullPrice
+                console.log(`inside the map is ${price}`)
+            })
     }
     );
+    console.log(`outside the map is ${price}`)
     return price
 };
 
 app.post('/create-payment-intent', async (req, res) => {
     const { items } = req.body;
-    console.log(items)
     const paymentIntent = await stripe.paymentIntents.create({
         amount:
             Promise.all([calculateOrderAmount(items)]).then((values) => {
@@ -70,3 +80,5 @@ mongoose.connect(process.env.MONGO_URL)
     .catch((error) => {
         console.log(error)
     })
+
+
