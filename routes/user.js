@@ -25,7 +25,8 @@ router.post('/signup', async (req, res) => {
     try {
         const user = await User.signup(firstname, lastname, email, password)
         const token = createToken(user._id)
-        res.status(200).json({ email, token })
+        const isAdmin = user.isAdmin
+        res.status(200).json({ firstname, lastname, isAdmin, email, token })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
