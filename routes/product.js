@@ -17,10 +17,23 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/search", async (req, res) => {
+router.get("/suggestions", async (req, res) => {
     try {
         const products = await Product.find({})
         return res.status(200).json(products);
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+});
+router.get("/search", async (req, res) => {
+    try {
+        const name = req.headers.name;
+        const products = await Product.find({ name: name })
+        if (products) {
+            return res.status(200).json(products);
+        } else {
+            return res.status(200).json({ message: 'there are no products with this name' })
+        }
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
