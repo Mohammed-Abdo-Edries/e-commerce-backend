@@ -69,9 +69,13 @@ router.delete("/delete", onlyAdmin, async (req, res) => {
         const { id: _id } = req.headers;
         const deletedProduct = await Product.findByIdAndDelete({ _id });
         if (deletedProduct) {
-            await fs.unlink(
-                path.join(__dirname, "..", "images", deletedProduct.imgURL) || null
-            );
+            if (deletedProduct.imgURL) {
+                await fs.unlink(
+                    path.join(__dirname, "..", "images", deletedProduct.imgURL) || null
+                );
+            } else {
+                null
+            }
             return res.status(200).json({ message: "Product Deleted" });
         }
     } catch (error) {
