@@ -17,27 +17,27 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/suggestions", async (req, res) => {
-    try {
-        const products = await Product.find({})
-        return res.status(200).json(products);
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
-router.get("/search", async (req, res) => {
-    try {
-        const name = req.headers.name;
-        const products = await Product.find({ name: name })
-        if (products) {
-            return res.status(200).json(products);
-        } else {
-            return res.status(200).json({ message: 'there are no products with this name' })
-        }
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
+// router.get("/suggestions", async (req, res) => {
+//     try {
+//         const products = await Product.find({})
+//         return res.status(200).json(products);
+//     } catch (error) {
+//         res.status(400).json({ message: error.message })
+//     }
+// });
+// router.get("/search", async (req, res) => {
+//     try {
+//         const name = req.headers.name;
+//         const products = await Product.find({ name: name })
+//         if (products) {
+//             return res.status(200).json(products);
+//         } else {
+//             return res.status(200).json({ message: 'there are no products with this name' })
+//         }
+//     } catch (error) {
+//         res.status(400).json({ message: error.message })
+//     }
+// });
 
 router.get("/:id", async (req, res) => {
     try {
@@ -51,10 +51,10 @@ router.get("/:id", async (req, res) => {
 
 router.post("/create", upload, onlyAdmin, async (req, res) => {
     try {
-        const { name, price, category, subCategory, details } = req.body;
+        const { name, price, description, category, subCategory, bestseller } = req.body;
         const { filename: imgURL } = req.file;
         const product = await Product.create({
-            name, price, category, subCategory, imgURL, details
+            name, price, description, category, subCategory, imgURL, bestseller
         });
         if (product) {
             return res.status(200).json({ message: "Product Created Successfuly" });

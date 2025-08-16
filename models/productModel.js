@@ -9,6 +9,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    description: {
+        type: String,
+        required: true
+    },
     imgURL: { type: String, required: true },
     category: {
         type: String,
@@ -20,9 +24,11 @@ const productSchema = new mongoose.Schema({
         enum: ["topwaer", "bottomwear", "winterwear"],
         required: true
     },
-    details: {
-        type: String
+    bestseller: {
+        type: Boolean,
+        default: false
     }
+    
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);
