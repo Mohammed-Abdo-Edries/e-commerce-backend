@@ -49,7 +49,7 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.post("/create", upload.single("image"), onlyAdmin, async (req, res) => {
+router.post("/create", upload, onlyAdmin, async (req, res) => {
     try {
         const { name, price, category, subCategory, details } = req.body;
         const { filename: imgURL } = req.file;
