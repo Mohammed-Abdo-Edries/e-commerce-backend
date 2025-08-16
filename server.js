@@ -15,9 +15,9 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use('/product', productRoutes)
 app.use('/user', userRoutes)
 app.use('/orders', orderRouts)
-
+console.log(process.env.MONGO_URI)
 mongoose.set("strictQuery", false)
-mongoose.connect(process.env.MONGO_URL)
+mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         app.listen(process.env.PORT, () => {
             console.log('listeneing on port', process.env.PORT)

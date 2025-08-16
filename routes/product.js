@@ -9,8 +9,8 @@ const onlyAdmin = require("../middlewares/onlyAdmin")
 
 router.get("/", async (req, res) => {
     try {
-        const category = req.headers.category || null;
-        const products = await Product.find({ category }).sort({ createdAt: -1 });
+        // const category = req.headers.category || null;
+        const products = await Product.find({}).sort({ createdAt: -1 });
         return res.status(200).json(products);
     } catch (error) {
         res.status(400).json({ message: error.message })
@@ -49,12 +49,12 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.post("/create", upload, onlyAdmin, async (req, res) => {
+router.post("/create", upload.single("image"), onlyAdmin, async (req, res) => {
     try {
-        const { name, price, category, details } = req.body;
+        const { name, price, category, subCategory, details } = req.body;
         const { filename: imgURL } = req.file;
         const product = await Product.create({
-            name, price, category, imgURL, details
+            name, price, category, subCategory, imgURL, details
         });
         if (product) {
             return res.status(200).json({ message: "Product Created Successfuly" });

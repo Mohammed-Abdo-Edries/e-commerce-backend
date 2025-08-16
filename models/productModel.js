@@ -12,7 +12,12 @@ const productSchema = new mongoose.Schema({
     imgURL: { type: String, required: true },
     category: {
         type: String,
-        enum: ["pants", "shirt", "dress", "shoes"],
+        enum: ["men", "women", "kids"],
+        required: true
+    },
+    subCategory: {
+        type: String,
+        enum: ["topwaer", "bottomwear", "winterwear"],
         required: true
     },
     details: {

@@ -1,0 +1,32 @@
+POST http://localhost:4000/user/signup HTTP/1.1
+content-type: application/json
+
+{
+    "firstname": "sample",
+    "lastname": "mohamed",
+    "email": "moe@gmail.com",
+    "password": "moepass@3"
+}
+###
+POST http://localhost:4000/user/login HTTP/1.1
+content-type: application/json
+
+{
+    # "firstname": "sample",
+    # "lastname": "mohamed",
+    "email": "moe@gmail.com",
+    "password": "moepass@3"
+}
+###
+GET http://localhost:4000/product/ HTTP/1.1
+content-type: application/json
+
+# {
+#     # "firstname": "sample",
+#     # "lastname": "mohamed",
+#     "email": "moe@gmail.com",
+#     "password": "moepass@3"
+# }
+###
+GET http://localhost:4000/product/ HTTP/1.1
+content-type: application/json

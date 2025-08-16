@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "keywords": [
     "eCommerce",
@@ -19,10 +19,10 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^8.5.1",
-    "mongodb": "^5.7.0",
-    "mongoose": "^6.8.0",
+    "express": "^5.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^5.9.2",
+    "mongoose": "^8.17.0",
     "multer": "^1.4.5-lts.1",
     "stripe": "^12.16.0",
     "validator": "^13.7.0"
