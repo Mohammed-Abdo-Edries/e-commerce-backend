@@ -5,9 +5,10 @@ const path = require("path");
 const userRoutes = require('./routes/user')
 const productRoutes = require('./routes/product')
 const orderRouts = require('./routes/order')
+const {EventEmitter} = require("node:events");
 require('dotenv').config()
+const emitter = new EventEmitter();
 const app = express()
-
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
