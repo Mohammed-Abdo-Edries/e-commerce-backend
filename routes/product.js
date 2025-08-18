@@ -5,7 +5,7 @@ const path = require("path");
 const express = require('express')
 const router = express.Router()
 const onlyAdmin = require("../middlewares/onlyAdmin")
-
+const cloudinary = require("cloudinary").v2;
 
 router.get("/", async (req, res) => {
     try {
@@ -49,12 +49,18 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.post("/create", upload, onlyAdmin, async (req, res) => {
+router.post("/create", onlyAdmin, async (req, res) => {
     try {
         const { name, price, description, category, subCategory, bestseller } = req.body;
-        const { filename: imgURL } = req.file;
+        let imageUrl = null;
+        if (req.file) {
+          const result = await cloudinary.uploader.upload(req.file.path, {
+            resource_type: "image",
+          });
+          imageUrl = result.secure_url;
+        }
         const product = await Product.create({
-            name, price, description, category, subCategory, imgURL, bestseller
+            name, price, description, category, subCategory, imgURL:imageUrl, bestseller
         });
         if (product) {
             return res.status(200).json({ message: "Product Created Successfuly" });

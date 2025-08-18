@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema({
     },
     subCategory: {
         type: String,
-        enum: ["topwaer", "bottomwear", "winterwear"],
+        enum: ["topwear", "bottomwear", "winterwear"],
         required: true
     },
     bestseller: {
