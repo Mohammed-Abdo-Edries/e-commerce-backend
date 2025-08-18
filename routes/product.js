@@ -6,6 +6,7 @@ const express = require('express')
 const router = express.Router()
 const onlyAdmin = require("../middlewares/onlyAdmin")
 const cloudinary = require("cloudinary").v2;
+const path = require("path");
 
 router.get("/", async (req, res) => {
     try {
@@ -49,7 +50,7 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.post("/create", onlyAdmin, async (req, res) => {
+router.post("/create", onlyAdmin, upload.single("image"), async (req, res) => {
     try {
         const { name, price, description, category, subCategory, bestseller } = req.body;
         let imageUrl = null;
