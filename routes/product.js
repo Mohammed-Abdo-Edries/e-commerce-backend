@@ -5,9 +5,11 @@ const path = require("path");
 const express = require('express')
 const router = express.Router()
 const onlyAdmin = require("../middlewares/onlyAdmin")
-const cloudinary = require("cloudinary").v2;
-const path = require("path");
-
+// const cloudinary = require("cloudinary").v2;
+// const multer = require("multer");
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage });
+// const { cloudinaryConfig } = require("../config/cloudinaryConfig");
 router.get("/", async (req, res) => {
     try {
         // const category = req.headers.category || null;
@@ -50,26 +52,37 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.post("/create", onlyAdmin, upload.single("image"), async (req, res) => {
+router.post(
+  "/create",
+  onlyAdmin,
+  upload,
+  async (req, res, next) => {
     try {
-        const { name, price, description, category, subCategory, bestseller } = req.body;
-        let imageUrl = null;
-        if (req.file) {
-          const result = await cloudinary.uploader.upload(req.file.path, {
-            resource_type: "image",
-          });
-          imageUrl = result.secure_url;
-        }
-        const product = await Product.create({
-            name, price, description, category, subCategory, imgURL:imageUrl, bestseller
-        });
-        if (product) {
-            return res.status(200).json({ message: "Product Created Successfuly" });
-        }
+      const { name, price, description, category, subCategory, bestseller } = req.body;
+  const imgURL = req.file ? req.file.filename : null;
+      const product = await Product.create({
+        name,
+        price,
+        description,
+        category,
+        subCategory,
+        imgURL: imgURL,
+        bestseller,
+      });
+
+      return res.status(200).json({ message: "✅ Product Created Successfully", product });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+    if (req.file) {
+      const filePath = path.join(__dirname, "images", req.file.filename);
+      fs.unlink(filePath, (err) => {
+        if (err) console.error("Failed to delete file:", err);
+        else console.log("Rolled back file:", req.file.filename);
+      });
     }
-});
+      next(error);
+    }
+  }
+);
 
 router.delete("/delete", onlyAdmin, async (req, res) => {
     try {
