@@ -1,69 +1,120 @@
-const mongoose = require('mongoose')
-const bcrypt = require("bcryptjs")
-const validator = require("validator")
+const { DataTypes } = require("sequelize");
+const bcrypt = require("bcryptjs");
+const validator = require("validator");
+const { sequelize } = require("../config/db");
 
-const userSchema = new mongoose.Schema({
+const User = sequelize.define(
+  "User",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+
     firstname: {
-        type: String,
-        minlength: 3,
-        maxlength: 20,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [3, 20],
+      },
     },
+
     lastname: {
-        type: String,
-        minlength: 3,
-        maxlength: 20,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [3, 20],
+      },
     },
+
     email: {
-        type: String,
-        required: true,
-        unique: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
     },
+
     password: {
-        type: String,
-        required: true,
-        minlength: 5
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    isAdmin: { type: Boolean, default: false }
-}, { timestamps: true })
 
-userSchema.statics.signup = async function (firstname, lastname, email, password) {
-    if (!firstname || !lastname || !email || !password) {
-        throw Error('All fields must be filled')
-    }
-    if (!validator.isEmail(email)) {
-        throw Error('Email is not valid')
-    }
-    if (!validator.isStrongPassword(password, { minlength: 8, minUppercase: 0, minNumbers: 0, minSymbols: 0 })) {
-        throw Error('Password not strong enough')
-    }
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  },
+  {
+    tableName: "users",
+    timestamps: true,
+  }
+);
 
-    const exists = await this.findOne({ email })
-    if (exists) {
-        throw Error('Email already in use')
-    }
+// Signup
+User.signup = async function (firstname, lastname, email, password) {
+  if (!firstname || !lastname || !email || !password) {
+    throw new Error("All fields must be filled");
+  }
 
-    const salt = await bcrypt.genSaltSync(10)
-    const hash = await bcrypt.hashSync(password, salt)
-    const user = await this.create({ firstname, lastname, email, password: hash })
+  if (!validator.isEmail(email)) {
+    throw new Error("Email is not valid");
+  }
 
-    return user
-}
+  if (
+    !validator.isStrongPassword(password, {
+      minLength: 8,
+      minUppercase: 0,
+      minNumbers: 0,
+      minSymbols: 0,
+    })
+  ) {
+    throw new Error("Password not strong enough");
+  }
 
-userSchema.statics.login = async function (email, password) {
-    if (!email || !password) {
-        throw Error('All fields must be filled')
-    }
-    const user = await this.findOne({ email })
-    if (!user) {
-        throw Error('Incorrect email')
-    }
-    const match = await bcrypt.compare(password, user.password)
-    if (!match) {
-        throw Error('Incorrect password')
-    };
-    return user
-}
+  const exists = await User.findOne({
+    where: { email },
+  });
 
-module.exports = mongoose.model('User', userSchema)
+  if (exists) {
+    throw new Error("Email already in use");
+  }
+
+  const hash = await bcrypt.hash(password, 10);
+
+  const user = await User.create({
+    firstname,
+    lastname,
+    email,
+    password: hash,
+  });
+
+  return user;
+};
+
+// Login
+User.login = async function (email, password) {
+  if (!email || !password) {
+    throw new Error("All fields must be filled");
+  }
+
+  const user = await User.findOne({
+    where: { email },
+  });
+
+  if (!user) {
+    throw new Error("Incorrect email");
+  }
+
+  const match = await bcrypt.compare(password, user.password);
+
+  if (!match) {
+    throw new Error("Incorrect password");
+  }
+
+  return user;
+};
+
+module.exports = User;
