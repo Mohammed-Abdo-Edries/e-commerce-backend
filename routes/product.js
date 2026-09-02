@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router()
 const onlyAdmin = require("../middlewares/onlyAdmin")
 const upload = require("../multer")
+const auth = require("../middlewares/authMiddleware");
 const validate = require("../middlewares/validate");
 const { productSchema } = require("../validators/productValidator");
 // const multer = require("multer");
@@ -39,7 +40,14 @@ router.get("/", getProducts);
 // });
 
 router.get("/:id", getSingleProduct)
-router.post("/create", onlyAdmin, upload, createNewProduct);
-router.delete("/delete", onlyAdmin, deleteProduct)
-router.delete("/deleteAllProudcts", onlyAdmin, deleteAllProducts)
+router.post(
+  "/create",
+  auth,
+  onlyAdmin,
+  upload,
+  validate(productSchema),
+  createNewProduct
+);
+router.delete("/delete", auth, onlyAdmin, deleteProduct);
+router.delete("/deleteAllProudcts", auth, onlyAdmin, deleteAllProducts);
 module.exports = router;

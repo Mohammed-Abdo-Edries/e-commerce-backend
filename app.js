@@ -19,6 +19,13 @@ app.use("/product", productRoutes);
 app.use("/user", userRoutes);
 app.use("/orders", orderRoutes);
 
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Route not found",
+  });
+});
+
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error(err);

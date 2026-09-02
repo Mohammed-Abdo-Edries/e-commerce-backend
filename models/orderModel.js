@@ -1,35 +1,54 @@
-const mongoose = require('mongoose')
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/db");
 
-const orderSchema = new mongoose.Schema({
+const Order = sequelize.define(
+  "Order",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+
     products: {
-        type: Array,
-        required: true
+      type: DataTypes.JSONB,
+      allowNull: false,
     },
-    buyer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    adsress: {
-        type: String,
-        required: true
-    },
-    status: {
-        type: Boolean,
-        default: true
-    },
-    onWay: {
-        type: Boolean,
-        default: false
-    },
-    delivered: {
-        type: Boolean,
-        default: false
-    },
-    orderDate: {
-        type: Date,
-        default: Date.now
-    }
-}, { timestamps: true });
 
-module.exports = mongoose.model('Order', orderSchema);
+    buyer: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+
+    adsress: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+
+    onWay: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
+    delivered: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
+    orderDate: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    tableName: "orders",
+    timestamps: true,
+  }
+);
+
+module.exports = Order;

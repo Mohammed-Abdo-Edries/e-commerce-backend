@@ -1,0 +1,148 @@
+### Signup
+
+GET http://localhost:5000/product/
+Content-Type: application/json
+
+# {
+#   "firstname": "Mohammed",
+#   "lastname": "Abdo",
+#   "email": "test@example.com",
+#   "password": "g12345678#"
+# }
+### Delete Order
+DELETE http://localhost:5000/orders/deleteOrder/e01c6f5b-7441-47b0-abb6-62d5c276f724
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjMTQ2NGZiZi01ZDdkLTQ0NGYtYjRlZS0xNmZiYTg4OWE3OWQiLCJpYXQiOjE3ODgzNTEyODIsImV4cCI6MTc4ODYxMDQ4Mn0.2DtrJIkqBhBnD4AkuOI1SlZKIFmqfAfdaMa8QAZ3XCU
+### Get Orders By Status
+GET http://localhost:5000/orders/getOrdersByStatus/true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjMTQ2NGZiZi01ZDdkLTQ0NGYtYjRlZS0xNmZiYTg4OWE3OWQiLCJpYXQiOjE3ODgzNTEyODIsImV4cCI6MTc4ODYxMDQ4Mn0.2DtrJIkqBhBnD4AkuOI1SlZKIFmqfAfdaMa8QAZ3XCU
+### Get All Orders
+GET http://localhost:5000/orders/getAllOrders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjMTQ2NGZiZi01ZDdkLTQ0NGYtYjRlZS0xNmZiYTg4OWE3OWQiLCJpYXQiOjE3ODgzNTEyODIsImV4cCI6MTc4ODYxMDQ4Mn0.2DtrJIkqBhBnD4AkuOI1SlZKIFmqfAfdaMa8QAZ3XCU
+### Get My Orders
+GET http://localhost:5000/orders/getOrdersByUserId
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjMTQ2NGZiZi01ZDdkLTQ0NGYtYjRlZS0xNmZiYTg4OWE3OWQiLCJpYXQiOjE3ODgzNTEyODIsImV4cCI6MTc4ODYxMDQ4Mn0.2DtrJIkqBhBnD4AkuOI1SlZKIFmqfAfdaMa8QAZ3XCU
+### Get Order By ID
+GET http://localhost:5000/orders/getOrderById/e01c6f5b-7441-47b0-abb6-62d5c276f724
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjMTQ2NGZiZi01ZDdkLTQ0NGYtYjRlZS0xNmZiYTg4OWE3OWQiLCJpYXQiOjE3ODgzNTEyODIsImV4cCI6MTc4ODYxMDQ4Mn0.2DtrJIkqBhBnD4AkuOI1SlZKIFmqfAfdaMa8QAZ3XCU
+### Create Order
+POST http://localhost:5000/orders/createOrder
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjMTQ2NGZiZi01ZDdkLTQ0NGYtYjRlZS0xNmZiYTg4OWE3OWQiLCJpYXQiOjE3ODgzNTEyODIsImV4cCI6MTc4ODYxMDQ4Mn0.2DtrJIkqBhBnD4AkuOI1SlZKIFmqfAfdaMa8QAZ3XCU
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "productId": "test-product-id",
+      "quantity": 1,
+      "size": "M"
+    }
+  ],
+  "adsress": "home"
+}
+### Delete Product
+DELETE http://localhost:5000/product/delete
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjMTQ2NGZiZi01ZDdkLTQ0NGYtYjRlZS0xNmZiYTg4OWE3OWQiLCJpYXQiOjE3ODc5MzI4MjYsImV4cCI6MTc4ODE5MjAyNn0.L4TvDprho8s3Z5BEAug9Y8oKbMV5SMQFNS0pIuq7NV4
+id: 46a10ff1-7934-4f72-9d84-a7b2c0352ef6
+### Get Single Product
+GET http://localhost:5000/product/46a10ff1-7934-4f72-9d84-a7b2c0352ef6
+### Get All Products
+GET http://localhost:5000/product/
+### Create Product
+POST http://localhost:5000/product/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJjMTQ2NGZiZi01ZDdkLTQ0NGYtYjRlZS0xNmZiYTg4OWE3OWQiLCJpYXQiOjE3ODc5MzI4MjYsImV4cCI6MTc4ODE5MjAyNn0.L4TvDprho8s3Z5BEAug9Y8oKbMV5SMQFNS0pIuq7NV4
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="name"
+
+Classic TShirt
+------WebKitFormBoundary
+Content-Disposition: form-data; name="price"
+
+49.99
+------WebKitFormBoundary
+Content-Disposition: form-data; name="description"
+
+Classic cotton t-shirt
+------WebKitFormBoundary
+Content-Disposition: form-data; name="category"
+
+Men
+------WebKitFormBoundary
+Content-Disposition: form-data; name="subCategory"
+
+Topwear
+------WebKitFormBoundary
+Content-Disposition: form-data; name="sizes"
+
+S
+------WebKitFormBoundary
+Content-Disposition: form-data; name="sizes"
+
+M
+------WebKitFormBoundary
+Content-Disposition: form-data; name="sizes"
+
+L
+------WebKitFormBoundary
+Content-Disposition: form-data; name="bestseller"
+
+true
+------WebKitFormBoundary
+Content-Disposition: form-data; name="image"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< G:\projects\e-commerce-backend-master\images\1688617326577.jpg
+------WebKitFormBoundary--
+### Login
+POST http://localhost:5000/user/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "g12345678#"
+}
+###
+POST http://localhost:4000/user/signup HTTP/1.1
+content-type: application/json
+
+{
+    "firstname": "sample",
+    "lastname": "mohamed",
+    "email": "moe@gmail.com",
+    "password": "moepass@3"
+}
+###
+POST http://localhost:4000/user/login HTTP/1.1
+content-type: application/json
+
+{
+    # "firstname": "sample",
+    # "lastname": "mohamed",
+    "email": "moe@gmail.com",
+    "password": "moepass@3"
+}
+###
+GET http://localhost:4000/user/getAllUsers HTTP/1.1
+content-type: application/json
+
+# {
+#     # "firstname": "sample",
+#     # "lastname": "mohamed",
+#     "email": "moe@gmail.com",
+#     "password": "moepass@3"
+# }
+###
+GET http://localhost:4000/product/ HTTP/1.1
+content-type: application/json
+
+# {
+#     # "firstname": "sample",
+#     # "lastname": "mohamed",
+#     "email": "moe@gmail.com",
+#     "password": "moepass@3"
+# }
+###
+GET http://localhost:4000/product/ HTTP/1.1
+content-type: application/json

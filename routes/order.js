@@ -1,54 +1,57 @@
-const Order = require('../models/orderModel')
-const express = require('express')
-const router = express.Router()
+const express = require("express");
 
-router.get('/getAllOrders', async (req, res) => {
-    try {
-        const allOrders = await Order.find({}).sort({ createdAt: -1 });
-        res.status(200).json(allOrders);
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
-router.get('/getOrderById', async (req, res) => {
-    try {
-        const order = await Order.findById(req.headers._id)
-        res.status(200).json(order)
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
-router.get('/getOrdersByUserId', async (req, res) => {
-    try {
-        const orders = await Order.find({ buyer: req.headers._id })
-        res.status(200).json(orders)
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
-router.get('/getOrdersByStatus', async (req, res) => {
-    try {
-        const order = await Order.find({ status: req.header.status })
-        res.status(200).json(orders)
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
-router.post('/createOrder', async (req, res) => {
-    try {
-        const newOrder = await Order.create(req.body)
-        res.status(200).json(newOrder)
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
-router.delete('/deleteOrder', async (req, res) => {
-    try {
-        const order = await Order.findByIdAndDelete(req.header._id)
-        res.status(200).json(order)
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
+const router = express.Router();
+const validate = require("../middlewares/validate");
+const { orderSchema } = require("../validators/orderValidator");
+const auth = require("../middlewares/authMiddleware");
+const onlyAdmin = require("../middlewares/onlyAdmin");
+
+const {
+  getAllOrders,
+  getOrderById,
+  getOrdersByUserId,
+  getOrdersByStatus,
+  createOrder,
+  deleteOrder,
+} = require("../controllers/orderController");
+
+
+// ADMIN
+router.get("/getAllOrders", auth, onlyAdmin, getAllOrders);
+
+router.get(
+  "/getOrdersByStatus/:status",
+  auth,
+  onlyAdmin,
+  getOrdersByStatus
+);
+
+
+// AUTHENTICATED USERS
+router.get(
+  "/getOrderById/:id",
+  auth,
+  getOrderById
+);
+
+router.get(
+  "/getOrdersByUserId",
+  auth,
+  getOrdersByUserId
+);
+
+router.post(
+  "/createOrder",
+  auth,
+  validate(orderSchema),
+  createOrder
+);
+
+router.delete(
+  "/deleteOrder/:id",
+  auth,
+  deleteOrder
+);
+
 
 module.exports = router;
