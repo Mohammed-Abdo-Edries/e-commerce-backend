@@ -1,7 +1,10 @@
 const Product = require("../models/productModel");
 const fs = require("fs/promises");
 const path = require("path");
-
+const {
+  uploadImageToS3,
+  deleteImageFromS3,
+} = require("../services/s3Services");
 
 // GET ALL PRODUCTS
 const getProducts = async (req, res) => {
@@ -43,6 +46,8 @@ const getSingleProduct = async (req, res) => {
 
 // CREATE PRODUCT
 const createNewProduct = async (req, res, next) => {
+  let imageKey = null;
+
   try {
     const {
       name,
@@ -54,13 +59,14 @@ const createNewProduct = async (req, res, next) => {
       bestseller,
     } = req.body;
 
-    const imgURL = req.file ? req.file.filename : null;
-
-    if (!imgURL) {
+    if (!req.file) {
       return res.status(400).json({
         message: "Product image is required",
       });
     }
+
+    const uploadedImage = await uploadImageToS3(req.file);
+    imageKey = uploadedImage.imageKey;
 
     const product = await Product.create({
       name,
@@ -69,7 +75,7 @@ const createNewProduct = async (req, res, next) => {
       category,
       subCategory,
       sizes: sizes || [],
-      imgURL,
+      imgURL: uploadedImage.imageUrl,
       bestseller: bestseller || false,
     });
 
@@ -77,23 +83,14 @@ const createNewProduct = async (req, res, next) => {
       message: "Product Created Successfully",
       product,
     });
-
   } catch (error) {
-
-    if (req.file) {
-      const filePath = path.join(
-        __dirname,
-        "..",
-        "images",
-        req.file.filename
-      );
-
+    if (imageKey) {
       try {
-        await fs.unlink(filePath);
-      } catch (unlinkError) {
+        await deleteImageFromS3(imageKey);
+      } catch (deleteError) {
         console.error(
-          "Failed to delete uploaded file:",
-          unlinkError.message
+          "Failed to delete uploaded image from S3:",
+          deleteError.message
         );
       }
     }
@@ -101,7 +98,6 @@ const createNewProduct = async (req, res, next) => {
     next(error);
   }
 };
-
 
 // DELETE PRODUCT
 const deleteProduct = async (req, res) => {
@@ -125,7 +121,9 @@ const deleteProduct = async (req, res) => {
       );
 
       try {
-        await fs.unlink(imagePath);
+        if (product.imageKey) {
+          await deleteImageFromS3(product.imageKey);
+      }
       } catch (error) {
         console.log(
           "Image could not be deleted:",

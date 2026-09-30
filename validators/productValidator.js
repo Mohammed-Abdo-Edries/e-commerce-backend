@@ -21,9 +21,24 @@ const productSchema = Joi.object({
     .valid("Topwear", "Bottomwear", "Winterwear")
     .required(),
 
-  sizes: Joi.array()
-    .items(Joi.string())
-    .default([]),
+  sizes: Joi.alternatives()
+  .try(
+    Joi.array().items(Joi.string()),
+    Joi.string().custom((value, helpers) => {
+      try {
+        const parsed = JSON.parse(value);
+
+        if (!Array.isArray(parsed)) {
+          return helpers.error("any.invalid");
+        }
+
+        return parsed;
+      } catch {
+        return helpers.error("any.invalid");
+      }
+    })
+  )
+  .default([]),
 
   bestseller: Joi.boolean()
     .default(false),

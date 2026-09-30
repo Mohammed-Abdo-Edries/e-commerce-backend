@@ -48,6 +48,10 @@ const Product = sequelize.define(
       allowNull: false,
       defaultValue: [],
     },
+    imageKey: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
     bestseller: {
       type: DataTypes.BOOLEAN,
